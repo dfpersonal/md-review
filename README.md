@@ -10,6 +10,8 @@
   - テーブル
   - タスクリスト
   - 取り消し線
+- 📁 **ファイルツリー表示** - カレントディレクトリ内の全Markdownファイルを一覧表示
+- 🗂️ **2カラムレイアウト** - 左側にツリー、右側にプレビュー
 - ⚡ 高速な起動（Vite）
 - 🚀 軽量なAPIサーバー（Hono）
 - 📦 TypeScript + React 19
@@ -23,13 +25,43 @@ pnpm install
 
 ## 使い方
 
-### 基本的な使い方
+md-previewには**2つのモード**があります：
+
+### 1. 開発モード（推奨）
+
+カレントディレクトリ内の全Markdownファイルをツリー表示し、選択してプレビューできます。
+
+```bash
+# APIサーバーを起動
+node server/index.js &
+
+# 開発サーバーを起動
+pnpm run dev
+```
+
+または、両方同時に起動：
+
+```bash
+# APIサーバーをバックグラウンドで起動
+node server/index.js &
+
+# Viteサーバーを起動（http://localhost:6060 が自動で開きます）
+pnpm run dev
+```
+
+ブラウザで `http://localhost:6060` を開くと、以下のようなUIが表示されます：
+- **左側**: ファイルツリー（カレントディレクトリ内の全.mdファイル）
+- **右側**: 選択されたMarkdownファイルのプレビュー
+
+### 2. CLI モード
+
+特定のMarkdownファイルのみをプレビューします。
 
 ```bash
 node bin/md-preview.js <markdown-file-path>
 ```
 
-### 例
+#### 例
 
 ```bash
 # サンプルファイルをプレビュー

@@ -1,0 +1,76 @@
+.dev-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.dev-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.dev-main {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+
+.dev-loading,
+.dev-placeholder,
+.dev-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #57606a;
+}
+
+.dev-placeholder h2,
+.dev-empty h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  color: #24292f;
+}
+
+.dev-placeholder p,
+.dev-empty p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.dev-placeholder .file-count {
+  margin-top: 16px;
+  padding: 8px 16px;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #24292f;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dev-sidebar {
+    width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dev-container {
+    flex-direction: column;
+  }
+
+  .dev-sidebar {
+    width: 100%;
+    height: 40%;
+    border-right: none;
+    border-bottom: 1px solid #d0d7de;
+  }
+
+  .dev-main {
+    height: 60%;
+  }
+}

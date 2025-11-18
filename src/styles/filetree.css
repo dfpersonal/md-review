@@ -1,0 +1,95 @@
+.file-tree {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #f6f8fa;
+  border-right: 1px solid #d0d7de;
+}
+
+.file-tree-header {
+  padding: 16px;
+  border-bottom: 1px solid #d0d7de;
+  background-color: #fff;
+}
+
+.file-tree-header h3 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #24292f;
+}
+
+.file-count {
+  font-size: 12px;
+  color: #57606a;
+}
+
+.file-tree-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.tree-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  user-select: none;
+  transition: background-color 0.1s;
+}
+
+.tree-item:hover {
+  background-color: #eaeef2;
+}
+
+.tree-item.file {
+  color: #24292f;
+}
+
+.tree-item.file.selected {
+  background-color: #ddf4ff;
+  border-left: 2px solid #0969da;
+}
+
+.tree-item.directory {
+  color: #24292f;
+  font-weight: 500;
+}
+
+.file-icon,
+.folder-icon {
+  margin-right: 6px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.file-name,
+.folder-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tree-children {
+  /* No extra styling needed, handled by padding in tree-item */
+}
+
+/* Scrollbar styling */
+.file-tree-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.file-tree-content::-webkit-scrollbar-track {
+  background: #f6f8fa;
+}
+
+.file-tree-content::-webkit-scrollbar-thumb {
+  background: #d0d7de;
+  border-radius: 4px;
+}
+
+.file-tree-content::-webkit-scrollbar-thumb:hover {
+  background: #afb8c1;
+}
