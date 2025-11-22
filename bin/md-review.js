@@ -15,8 +15,8 @@ const __dirname = dirname(__filename);
 const program = new Command();
 
 program
-  .name('md-preview')
-  .description('Preview Markdown files in your browser')
+  .name('md-review')
+  .description('Review and annotate Markdown files with comments')
   .version('0.0.1')
   .argument('<file>', 'Path to the markdown file')
   .option('-p, --port <port>', 'Vite server port', '6060')
@@ -35,7 +35,7 @@ program
       console.warn(chalk.yellow('Warning: File does not have .md extension'));
     }
 
-    console.log(chalk.blue('Starting md-preview...'));
+    console.log(chalk.blue('Starting md-review...'));
     console.log(chalk.gray(`File: ${filePath}`));
     console.log(chalk.gray(`API Port: ${options.apiPort}`));
     console.log(chalk.gray(`Vite Port: ${options.port}`));

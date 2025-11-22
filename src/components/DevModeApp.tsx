@@ -13,7 +13,7 @@ export const DevModeApp = () => {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [focusSearch, setFocusSearch] = useState<boolean>(false);
-  const [commentsMap, setCommentsMap] = useLocalStorage<Record<string, Comment[]>>('md-preview-comments', {});
+  const [commentsMap, setCommentsMap] = useLocalStorage<Record<string, Comment[]>>('md-review-comments', {});
   const { content, filename, loading: markdownLoading, error: markdownError } = useMarkdown(selectedFile);
 
   const handleSearchClick = () => {
@@ -84,7 +84,7 @@ export const DevModeApp = () => {
       <div className="dev-main">
         {!selectedFile ? (
           <div className="dev-placeholder">
-            <h2>Welcome to md-preview</h2>
+            <h2>Welcome to md-review</h2>
             <p>Select a markdown file from the sidebar to preview</p>
             <p className="file-count">{files.length} markdown files found</p>
           </div>
