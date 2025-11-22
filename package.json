@@ -6,6 +6,19 @@
   "bin": {
     "md-review": "./bin/md-review.js"
   },
+  "files": [
+    "bin",
+    "dist",
+    "server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryo-manba/md-review.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ryo-manba/md-review/issues"
+  },
+  "homepage": "https://github.com/ryo-manba/md-review#readme",
   "scripts": {
     "dev": "concurrently 'pnpm run server' 'pnpm run client'",
     "client": "vite",
@@ -15,11 +28,9 @@
   },
   "keywords": [
     "markdown",
-    "review",
-    "comment",
-    "cli"
+    "review"
   ],
-  "author": "",
+  "author": "ryo-manba",
   "license": "MIT",
   "dependencies": {
     "@hono/node-server": "^1.19.6",
