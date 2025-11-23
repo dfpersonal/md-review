@@ -23,7 +23,7 @@ md-review README.md
 
 ### Options
 
-```
+```shell
 -p, --port <port>      Vite server port (default: 6060)
     --api-port <port>  API server port (default: 3030)
     --no-open          Do not open browser automatically
@@ -33,4 +33,4 @@ md-review README.md
 
 ## License
 
-MIT
+[MIT](./LICENSE)
