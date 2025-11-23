@@ -37,8 +37,7 @@ const args = mri(process.argv.slice(2), {
     v: 'version'
   },
   default: {
-    port: '6060',
-    'api-port': '3030',
+    port: '3030',
     open: true
   },
   boolean: ['help', 'version', 'open']
@@ -54,8 +53,7 @@ Usage:
   md-review <file> [options]       Preview a specific markdown file (.md or .markdown)
 
 Options:
-  -p, --port <port>      Vite server port (default: 6060)
-  --api-port <port>      API server port (default: 3030)
+  -p, --port <port>      Server port (default: 3030)
   --no-open              Do not open browser automatically
   -h, --help             Show this help message
   -v, --version          Show version number
@@ -76,12 +74,10 @@ if (args.version) {
 
 const file = args._[0];
 const port = validatePort(args.port, 'port');
-const apiPort = validatePort(args['api-port'], 'api-port');
 const shouldOpen = args.open;
 
 // Set environment variables
-process.env.API_PORT = apiPort;
-process.env.VITE_PORT = port;
+process.env.API_PORT = port;
 
 // If file is specified, validate it
 if (file) {
@@ -106,66 +102,51 @@ if (file) {
 }
 
 console.log('Starting md-review...');
-console.log(`   API Port: ${apiPort}`);
-console.log(`   Vite Port: ${port}`);
+console.log(`   Port: ${port}`);
 
-// Start API server
-const apiProcess = spawn('node', ['server/index.js'], {
+// Start server
+const serverProcess = spawn('node', ['server/index.js'], {
   cwd: packageRoot,
   stdio: ['inherit', 'pipe', 'inherit'],
   env: process.env
 });
 
-let viteProcess = null;
 let serverReady = false;
 
-// Wait for API server to be ready before starting Vite
-apiProcess.stdout.on('data', (data) => {
+// Wait for server to be ready before opening browser
+serverProcess.stdout.on('data', async (data) => {
   process.stdout.write(data);
   const output = data.toString();
 
   if (!serverReady && output.includes(SERVER_READY_MESSAGE)) {
     serverReady = true;
-    console.log('Starting Vite preview server...');
 
-    viteProcess = spawn('node', [
-      'node_modules/vite/bin/vite.js',
-      'preview',
-      '--port', port,
-      ...(shouldOpen ? ['--open'] : [])
-    ], {
-      cwd: packageRoot,
-      stdio: 'inherit',
-      env: process.env
-    });
-
-    viteProcess.on('error', (err) => {
-      console.error('Vite server error:', err.message);
-    });
+    if (shouldOpen) {
+      const openModule = await import('open');
+      openModule.default(`http://localhost:${port}`);
+    }
   }
 });
 
 // Handle graceful shutdown
 const shutdown = () => {
   console.log('\nShutting down...');
-  apiProcess.kill('SIGINT');
-  viteProcess?.kill('SIGINT');
+  serverProcess.kill('SIGINT');
   process.exit(0);
 };
 
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
-// Handle API server exit
-apiProcess.on('exit', (code) => {
+// Handle server exit
+serverProcess.on('exit', (code) => {
   if (code !== 0 && code !== null) {
-    console.error(`API server exited with code ${code}`);
+    console.error(`Server exited with code ${code}`);
   }
-  viteProcess?.kill('SIGINT');
   process.exit(code || 0);
 });
 
-apiProcess.on('error', (err) => {
-  console.error('Failed to start API server:', err.message);
+serverProcess.on('error', (err) => {
+  console.error('Failed to start server:', err.message);
   process.exit(1);
 });

@@ -1,8 +1,15 @@
 // server/index.js
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { readFile, readdir, stat } from 'fs/promises';
-import { basename, join, relative, resolve } from 'path';
+import { basename, join, relative, resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageRoot = resolve(__dirname, '..');
+const distDir = resolve(packageRoot, 'dist');
 
 // Port validation function
 function validatePort(value) {
@@ -139,6 +146,20 @@ app.get('/api/markdown/:path{.+}', async (c) => {
     return c.json({
       error: 'Failed to read markdown file'
     }, 500);
+  }
+});
+
+// Serve static files from dist directory (for production/CLI mode)
+app.use('/*', serveStatic({ root: relative(process.cwd(), distDir) || '.' }));
+
+// Fallback to index.html for SPA routing
+app.get('*', async (c) => {
+  try {
+    const indexPath = resolve(distDir, 'index.html');
+    const html = await readFile(indexPath, 'utf-8');
+    return c.html(html);
+  } catch (err) {
+    return c.text('Not found', 404);
   }
 });
 
