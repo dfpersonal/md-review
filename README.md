@@ -1,220 +1,36 @@
-# md-preview
+# md-review
 
-ローカルのMarkdownファイルをブラウザで見やすくプレビューするCLIツール
+Markdown ファイルにコメントを付けてレビューするための CLI ツール。
+コメントはコピー可能で、AI エージェントへのフィードバックに使える。
 
-## 特徴
+## Features
 
-- 🎨 GitHub風の見やすいデザイン
-- 🌈 シンタックスハイライト対応（highlight.js）
-- ✅ GitHub Flavored Markdown (GFM) サポート
-  - テーブル
-  - タスクリスト
-  - 取り消し線
-- 📁 **ファイルツリー表示** - カレントディレクトリ内の全Markdownファイルを一覧表示
-- 🗂️ **2カラムレイアウト** - 左側にツリー、右側にプレビュー
-- ⚡ 高速な起動（Vite）
-- 🚀 軽量なAPIサーバー（Hono）
-- 📦 TypeScript + React 19
+- Markdown をそのままの形式で表示
+- 特定の行にコメントを残せる
+- ツリービューでファイルを選択
 
-## インストール
+## Install
 
 ```bash
-# 依存パッケージのインストール
-pnpm install
+npm install -g md-review
 ```
 
-## 使い方
-
-md-previewには**2つのモード**があります：
-
-### 1. 開発モード（推奨）
-
-カレントディレクトリ内の全Markdownファイルをツリー表示し、選択してプレビューできます。
+## Usage
 
 ```bash
-# APIサーバーを起動
-node server/index.js &
-
-# 開発サーバーを起動
-pnpm run dev
+md-review README.md
 ```
 
-または、両方同時に起動：
-
-```bash
-# APIサーバーをバックグラウンドで起動
-node server/index.js &
-
-# Viteサーバーを起動（http://localhost:6060 が自動で開きます）
-pnpm run dev
-```
-
-ブラウザで `http://localhost:6060` を開くと、以下のようなUIが表示されます：
-- **左側**: ファイルツリー（カレントディレクトリ内の全Markdownファイル：.md、.markdown）
-- **右側**: 選択されたMarkdownファイルのプレビュー
-
-### 2. CLI モード
-
-特定のMarkdownファイルのみをプレビューします。
-
-```bash
-node bin/md-preview.js <markdown-file-path>
-```
-
-#### 例
-
-```bash
-# サンプルファイルをプレビュー
-node bin/md-preview.js test-samples/sample.md
-
-# 任意のMarkdownファイルをプレビュー
-node bin/md-preview.js ./docs/README.md
-node bin/md-preview.js ~/Documents/notes.md
-```
-
-### オプション
-
-```bash
-# ポート番号を指定
-node bin/md-preview.js --port 8080 --api-port 3000 file.md
-
-# ブラウザを自動的に開かない
-node bin/md-preview.js --no-open file.md
-
-# ヘルプを表示
-node bin/md-preview.js --help
-
-# バージョンを表示
-node bin/md-preview.js --version
-```
-
-## オプション一覧
-
-| オプション | 短縮形 | デフォルト | 説明 |
-|-----------|--------|-----------|------|
-| `--port` | `-p` | `6060` | Viteサーバーのポート番号 |
-| `--api-port` | - | `3030` | APIサーバーのポート番号 |
-| `--no-open` | - | - | ブラウザを自動的に開かない |
-| `--help` | `-h` | - | ヘルプを表示 |
-| `--version` | `-v` | - | バージョンを表示 |
-
-## 起動の流れ
-
-1. CLIコマンドを実行すると、以下のサーバーが起動します：
-   - **APIサーバー（Hono）**: `http://localhost:3030` - Markdownファイルを読み込むAPI
-   - **Viteサーバー**: `http://localhost:6060` - Reactアプリケーション
-
-2. 自動的にブラウザで `http://localhost:6060` が開き、Markdownファイルが表示されます
-
-3. 終了するには `Ctrl+C` を押してください
-
-## 技術スタック
-
-### フロントエンド
-- **React** 19 - UIライブラリ
-- **TypeScript** - 型安全な開発
-- **Vite** - 高速な開発サーバー
-- **react-markdown** - Markdownレンダリング
-- **remark-gfm** - GFM記法サポート
-- **rehype-highlight** - シンタックスハイライト
-- **highlight.js** - コードハイライトライブラリ
-
-### バックエンド
-- **Hono** - 高速で軽量なWebフレームワーク
-- **@hono/node-server** - Node.js用アダプター
-
-### CLI
-- **commander** - コマンドライン引数のパース
-- **chalk** - ターミナル出力の色付け
-- **open** - ブラウザを開く
-
-## プロジェクト構成
+### Options
 
 ```
-md-preview/
-├── bin/
-│   └── md-preview.js           # CLI エントリーポイント
-├── server/
-│   └── index.js                # Hono APIサーバー
-├── src/
-│   ├── components/
-│   │   ├── ErrorDisplay.tsx    # エラー表示
-│   │   └── MarkdownPreview.tsx # Markdownプレビュー
-│   ├── hooks/
-│   │   └── useMarkdown.ts      # Markdown取得フック
-│   ├── styles/
-│   │   └── markdown.css        # Markdownスタイル
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
-├── test-samples/
-│   └── sample.md               # テスト用サンプル
-├── index.html
-├── vite.config.ts
-├── tsconfig.json
-└── package.json
+-p, --port <port>      Vite server port (default: 6060)
+    --api-port <port>  API server port (default: 3030)
+    --no-open          Do not open browser automatically
+-h, --help             Show help
+-v, --version          Show version
 ```
 
-## サポートするMarkdown記法
-
-### 基本記法
-- 見出し (h1-h6)
-- 段落
-- 強調 (**太字**, *斜体*)
-- リスト（順序付き/順序なし）
-- インラインコード
-- コードブロック（シンタックスハイライト付き）
-- リンク
-- 引用
-- 水平線
-
-### GFM拡張記法
-- テーブル
-- タスクリスト
-- 取り消し線 (~~text~~)
-
-## 開発
-
-### 開発サーバーの起動
-
-```bash
-# Vite開発サーバーのみ起動
-pnpm run dev
-
-# APIサーバーのみ起動
-pnpm run server
-```
-
-### ビルド
-
-```bash
-pnpm run build
-```
-
-## トラブルシューティング
-
-### ポートが既に使用されている
-
-デフォルトのポート（6060, 3030）が既に使用されている場合は、別のポートを指定してください：
-
-```bash
-node bin/md-preview.js --port 8080 --api-port 3000 file.md
-```
-
-### ブラウザが自動的に開かない
-
-`--no-open` オプションを付けずに実行してください。または、手動で以下のURLを開いてください：
-
-```
-http://localhost:6060
-```
-
-### Markdownが表示されない
-
-1. APIサーバーが正常に起動しているか確認してください（`http://localhost:3030/api/health` にアクセス）
-2. ファイルパスが正しいか確認してください
-3. ファイルが読み取り可能か確認してください
-
-## ライセンス
+## License
 
 MIT
