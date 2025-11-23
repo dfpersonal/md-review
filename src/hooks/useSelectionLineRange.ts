@@ -6,16 +6,16 @@ export interface LineRange {
 }
 
 /**
- * 選択点の行番号を取得
+ * Get line number at selection point
  */
 function getLineAtSelectionPoint(node: Node, intraOffset: number): number | null {
-  // テキストノード → 親要素から data-line-start を探す
+  // For text nodes, find data-line-start from parent element
   let el: HTMLElement | null =
     node.nodeType === Node.TEXT_NODE
       ? node.parentElement
       : (node as HTMLElement);
 
-  // data-line-start を持つ要素まで遡る
+  // Traverse up to find element with data-line-start
   while (el && !el.hasAttribute('data-line-start')) {
     el = el.parentElement;
   }
@@ -24,7 +24,7 @@ function getLineAtSelectionPoint(node: Node, intraOffset: number): number | null
   const startLine = Number(el.getAttribute('data-line-start'));
   if (!Number.isFinite(startLine)) return null;
 
-  // 選択位置までの改行数をカウント
+  // Count newlines up to selection position
   const text = node.nodeType === Node.TEXT_NODE ? (node as Text).data : '';
   const fragment = text.slice(0, intraOffset);
   const extraNewlines = (fragment.match(/\n/g) || []).length;
@@ -33,7 +33,7 @@ function getLineAtSelectionPoint(node: Node, intraOffset: number): number | null
 }
 
 /**
- * 選択範囲の行番号を取得
+ * Get line range from selection
  */
 function getSelectedLineRange(): LineRange | null {
   const sel = window.getSelection();
@@ -50,11 +50,11 @@ function getSelectedLineRange(): LineRange | null {
   let startLine = Math.min(anchorLine, focusLine);
   let endLine = Math.max(anchorLine, focusLine);
 
-  // 選択テキストが改行のみで終わる場合、endLine を調整
-  // （ダブルクリックで単語選択時に次の行まで含まれる問題を回避）
+  // Adjust endLine when selection ends with newlines only
+  // (prevents including next line when double-clicking to select words)
   const selectedText = sel.toString();
   if (selectedText.endsWith('\n') && startLine < endLine) {
-    // 選択テキストから末尾の改行を除いた実際の行数を計算
+    // Calculate actual line count excluding trailing newlines
     const trimmedText = selectedText.replace(/\n+$/, '');
     const actualNewlines = (trimmedText.match(/\n/g) || []).length;
     endLine = startLine + actualNewlines;
@@ -64,7 +64,7 @@ function getSelectedLineRange(): LineRange | null {
 }
 
 /**
- * Markdown プレビュー内での選択行範囲を追跡するフック
+ * Hook to track selected line range within Markdown preview
  */
 export function useSelectionLineRange(containerRef: RefObject<HTMLElement | null>): LineRange | null {
   const [lineRange, setLineRange] = useState<LineRange | null>(null);
@@ -72,7 +72,7 @@ export function useSelectionLineRange(containerRef: RefObject<HTMLElement | null
   const handleSelectionChange = useCallback(() => {
     const sel = window.getSelection();
 
-    // 選択がコンテナ内かどうかチェック
+    // Check if selection is within container
     if (!sel || sel.isCollapsed || !containerRef.current) {
       setLineRange(null);
       return;

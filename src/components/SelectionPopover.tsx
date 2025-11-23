@@ -17,7 +17,7 @@ interface SelectionPopoverProps {
   onSubmitComment?: (comment: string, selectedText: string, startLine: number, endLine: number) => void;
 }
 
-// 選択点の行番号を取得
+// Get line number at selection point
 function getLineAtSelectionPoint(node: Node, intraOffset: number): number | null {
   let el: HTMLElement | null =
     node.nodeType === Node.TEXT_NODE
@@ -39,7 +39,7 @@ function getLineAtSelectionPoint(node: Node, intraOffset: number): number | null
   return startLine + extraNewlines;
 }
 
-// 選択範囲の行番号を取得
+// Get line range from selection
 function getSelectionLineRange(sel: Selection): { startLine: number; endLine: number } | null {
   if (sel.isCollapsed) return null;
 
@@ -77,9 +77,9 @@ export const SelectionPopover = ({
   const highlightRef = useRef<HTMLDivElement | null>(null);
   const isEditingRef = useRef(false);
 
-  // ハイライト要素を作成・更新
+  // Create or update highlight elements
   const updateHighlight = useCallback((range: Range | null) => {
-    // 既存のハイライトを削除
+    // Remove existing highlight
     if (highlightRef.current) {
       highlightRef.current.remove();
       highlightRef.current = null;
@@ -118,7 +118,7 @@ export const SelectionPopover = ({
   const updatePosition = useCallback(() => {
     const sel = window.getSelection();
     if (!sel || sel.isCollapsed || !containerRef.current) {
-      // 編集中はハイライトを維持
+      // Keep highlight while editing
       if (!isEditing) {
         setVisible(false);
         setSavedSelection(null);
@@ -140,10 +140,10 @@ export const SelectionPopover = ({
     const range = sel.getRangeAt(0);
     const rect = range.getBoundingClientRect();
 
-    // 行番号を取得
+    // Get line numbers
     const lineRange = getSelectionLineRange(sel);
 
-    // 選択範囲を保存
+    // Save selection range
     setSavedSelection({
       range: range.cloneRange(),
       text: sel.toString(),
@@ -162,14 +162,14 @@ export const SelectionPopover = ({
     e.preventDefault();
     e.stopPropagation();
 
-    // 現在の選択範囲をハイライト表示
+    // Highlight current selection
     if (savedSelection) {
       updateHighlight(savedSelection.range);
 
-      // 選択範囲の一番上に入力欄を配置
+      // Position input at the top of selection
       const rects = savedSelection.range.getClientRects();
       if (rects.length > 0) {
-        // 一番上の rect を探す
+        // Find topmost rect
         let topRect = rects[0];
         for (let i = 1; i < rects.length; i++) {
           if (rects[i].top < topRect.top) {
@@ -257,7 +257,7 @@ export const SelectionPopover = ({
     };
   }, [updatePosition, updateHighlight]);
 
-  // クリーンアップ
+  // Cleanup
   useEffect(() => {
     return () => {
       if (highlightRef.current) {

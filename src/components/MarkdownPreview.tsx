@@ -15,7 +15,7 @@ interface MarkdownPreviewProps {
   onCommentsChange: (comments: Comment[]) => void;
 }
 
-// 各要素に data-line-start を付与するコンポーネント群
+// Components that add data-line-start attribute to elements
 const componentsWithLinePosition: Components = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   p: ({ node, children, ...props }: any) => (

@@ -83,12 +83,12 @@ async function scanMarkdownFiles(dir, baseDir = dir) {
   return files;
 }
 
-// CORS設定
+// CORS configuration
 app.use('/*', cors({
   origin: CORS_ORIGIN
 }));
 
-// ヘルスチェック
+// Health check
 app.get('/api/health', (c) => {
   return c.json({ status: 'ok' });
 });
@@ -106,7 +106,7 @@ app.get('/api/files', async (c) => {
   }
 });
 
-// Markdownファイル取得API (CLI mode)
+// Get markdown file API (CLI mode)
 app.get('/api/markdown', async (c) => {
   if (!MARKDOWN_FILE_PATH) {
     return c.json({
