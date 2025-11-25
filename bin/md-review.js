@@ -112,18 +112,25 @@ const serverProcess = spawn('node', ['server/index.js'], {
 });
 
 let serverReady = false;
+let actualPort = port;
 
 // Wait for server to be ready before opening browser
 serverProcess.stdout.on('data', async (data) => {
   process.stdout.write(data);
   const output = data.toString();
 
+  // Extract actual port from "API Server running on http://localhost:XXXX"
+  const portMatch = output.match(/API Server running on http:\/\/localhost:(\d+)/);
+  if (portMatch) {
+    actualPort = parseInt(portMatch[1], 10);
+  }
+
   if (!serverReady && output.includes(SERVER_READY_MESSAGE)) {
     serverReady = true;
 
     if (shouldOpen) {
       const openModule = await import('open');
-      openModule.default(`http://localhost:${port}`);
+      openModule.default(`http://localhost:${actualPort}`);
     }
   }
 });
