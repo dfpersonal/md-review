@@ -25,17 +25,25 @@ npm install -g md-review
 ## Usage
 
 ```sh
-md-review README.md
+md-review [options]              # Browse all markdown files in current directory
+md-review <file> [options]       # Preview a specific markdown file
 ```
 
 ### Options
 
 ```sh
--p, --port <port>      Vite server port (default: 6060)
-    --api-port <port>  API server port (default: 3030)
+-p, --port <port>      Server port (default: 3030)
     --no-open          Do not open browser automatically
--h, --help             Show help
--v, --version          Show version
+-h, --help             Show this help message
+-v, --version          Show version number
+```
+
+### Examples
+
+```sh
+md-review                        # Browse all markdown files in current directory
+md-review README.md              # Preview README.md
+md-review docs/guide.md --port 8080
 ```
 
 ## License

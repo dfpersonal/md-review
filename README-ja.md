@@ -24,18 +24,26 @@ npm install -g md-review
 
 ## Usage
 
-```shell
-md-review README.md
+```sh
+md-review [options]              # カレントディレクトリのすべてのマークダウンファイルをプレビュー
+md-review <file> [options]       # 特定のマークダウンファイルをプレビュー
 ```
 
 ### Options
 
 ```sh
--p, --port <port>      Vite server port (default: 6060)
-    --api-port <port>  API server port (default: 3030)
-    --no-open          Do not open browser automatically
--h, --help             Show help
--v, --version          Show version
+-p, --port <port>     # サーバーポート (default: 3030)
+    --no-open         # ブラウザを自動で開かない
+-h, --help            # ヘルプメッセージを表示
+-v, --version         # バージョン番号を表示
+```
+
+### Examples
+
+```sh
+md-review                        # カレントディレクトリのすべてのマークダウンファイルをプレビュー
+md-review README.md              # README.md をプレビュー
+md-review docs/guide.md --port 8080
 ```
 
 ## License
