@@ -15,9 +15,10 @@ interface CommentListProps {
   onDeleteComment?: (id: string) => void;
   onDeleteAll?: () => void;
   onClose?: () => void;
+  onLineClick?: (line: number) => void;
 }
 
-export const CommentList = ({ comments, filename, onDeleteComment, onDeleteAll, onClose }: CommentListProps) => {
+export const CommentList = ({ comments, filename, onDeleteComment, onDeleteAll, onClose, onLineClick }: CommentListProps) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
 
@@ -116,11 +117,15 @@ export const CommentList = ({ comments, filename, onDeleteComment, onDeleteAll, 
         {comments.map((comment) => (
           <div key={comment.id} className="comment-item">
             <div className="comment-item-header">
-              <span className="comment-item-lines">
+              <button
+                className="comment-item-lines"
+                onClick={() => onLineClick?.(comment.startLine)}
+                title="Jump to line"
+              >
                 Line {comment.startLine === comment.endLine
                   ? comment.startLine
                   : `${comment.startLine}-${comment.endLine}`}
-              </span>
+              </button>
               <div className="comment-item-actions">
                 <button
                   className={`comment-item-copy ${copiedId === comment.id ? 'copied' : ''}`}

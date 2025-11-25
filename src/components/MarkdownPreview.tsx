@@ -120,6 +120,23 @@ export const MarkdownPreview = ({ content, filename, filePath, comments, onComme
     onCommentsChange([]);
   };
 
+  const handleLineClick = (line: number) => {
+    if (!contentRef.current) return;
+
+    // Find the element with the matching line number
+    const element = contentRef.current.querySelector(`[data-line-start="${line}"]`);
+    if (element) {
+      // Scroll to the element
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Add highlight animation
+      element.classList.add('highlight-line');
+      setTimeout(() => {
+        element.classList.remove('highlight-line');
+      }, 2000);
+    }
+  };
+
   return (
     <div className={`markdown-with-comments ${isResizing ? 'resizing' : ''} ${isCollapsed ? 'comments-collapsed' : ''}`}>
       <div className="markdown-container" style={{ paddingRight: isCollapsed ? '0' : `${commentsSidebarWidth + 20}px` }}>
@@ -167,6 +184,7 @@ export const MarkdownPreview = ({ content, filename, filePath, comments, onComme
             onDeleteComment={handleDeleteComment}
             onDeleteAll={handleDeleteAllComments}
             onClose={toggleCollapse}
+            onLineClick={handleLineClick}
           />
         </aside>
       )}

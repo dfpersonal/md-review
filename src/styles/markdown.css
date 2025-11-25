@@ -138,6 +138,24 @@
   padding-left: 0;
 }
 
+/* Highlight animation for line jump */
+.markdown-content .highlight-line {
+  animation: highlightFade 2s ease-out;
+  background-color: rgba(88, 166, 255, 0.2);
+  border-radius: 3px;
+  padding: 0.25rem;
+  margin: -0.25rem;
+}
+
+@keyframes highlightFade {
+  0% {
+    background-color: rgba(88, 166, 255, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
 /* 見出し */
 .markdown-content h1 {
   font-size: 2em;
@@ -519,6 +537,17 @@
   font-size: 0.75rem;
   color: var(--text-tertiary);
   font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  transition: color 0.15s;
+}
+
+.comment-item-lines:hover {
+  color: var(--link-color);
 }
 
 .comment-item-actions {
