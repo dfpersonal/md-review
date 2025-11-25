@@ -12,6 +12,9 @@ Comments can be copied and used as feedback for AI agents.
 - Display Markdown in its original format
 - Add comments to specific lines
 - Select files from tree view
+- Dark mode support (follows system preferences)
+- Resizable and collapsible sidebars
+- Click line numbers in comments to jump to corresponding content
 
 ## Install
 
