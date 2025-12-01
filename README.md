@@ -11,10 +11,12 @@ Comments can be copied and used as feedback for AI agents.
 
 - Display Markdown in its original format
 - Add comments to specific lines
+- Edit existing comments
 - Select files from tree view
 - Dark mode support (follows system preferences)
 - Resizable and collapsible sidebars
 - Click line numbers in comments to jump to corresponding content
+- Hot reload when markdown files change
 
 ## Install
 
@@ -45,6 +47,35 @@ md-review                        # Browse all markdown files in current director
 md-review README.md              # Preview README.md
 md-review docs/guide.md --port 8080
 ```
+
+## Comment Management
+
+### Adding Comments
+1. Select text in the markdown preview
+2. Click the "Comment" button that appears
+3. Type your comment and press `Cmd/Ctrl+Enter` or click "Submit"
+
+### Editing Comments
+1. Click the edit icon (pencil) on any existing comment
+2. Modify the text in the textarea
+3. Press `Cmd/Ctrl+Enter` or click "Save" to save changes
+4. Press `Escape` or click "Cancel" to discard changes
+
+### Keyboard Shortcuts
+- `Cmd/Ctrl+Enter` - Submit/Save comment
+- `Escape` - Cancel editing
+- `Cmd+K` - Focus search bar (in directory mode)
+
+## Hot Module Replacement
+
+md-review automatically watches for changes to markdown files:
+
+- When you edit and save a markdown file, the preview updates automatically
+- No manual browser refresh needed
+- Works in both single file and directory browsing modes
+- File watching uses efficient Server-Sent Events (SSE)
+
+This makes it ideal for live editing workflows and quick iteration on documentation.
 
 ## License
 
