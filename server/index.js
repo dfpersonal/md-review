@@ -5,6 +5,7 @@ import { serveStatic } from '@hono/node-server/serve-static';
 import { readFile, readdir, stat } from 'fs/promises';
 import { basename, join, relative, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { watch } from 'chokidar';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -50,6 +51,9 @@ const PORT = validatePort(process.env.API_PORT || 3030);
 const MARKDOWN_FILE_PATH = process.env.MARKDOWN_FILE_PATH;
 const BASE_DIR = process.env.BASE_DIR || process.cwd();
 
+// Store SSE clients
+const sseClients = new Set();
+
 // Check if file has markdown extension
 function isMarkdownFile(filename) {
   return filename.endsWith('.md') || filename.endsWith('.markdown');
@@ -83,6 +87,34 @@ async function scanMarkdownFiles(dir, baseDir = dir) {
 
   return files;
 }
+
+// SSE endpoint for file change notifications
+app.get('/api/watch', (c) => {
+  const stream = new ReadableStream({
+    start(controller) {
+      // Send initial connection message
+      const encoder = new TextEncoder();
+      controller.enqueue(encoder.encode('data: {"type":"connected"}\n\n'));
+
+      // Store client
+      const client = { controller, encoder };
+      sseClients.add(client);
+
+      // Cleanup on disconnect
+      c.req.raw.signal.addEventListener('abort', () => {
+        sseClients.delete(client);
+      });
+    }
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive'
+    }
+  });
+});
 
 // Health check
 app.get('/api/health', (c) => {
@@ -162,8 +194,63 @@ app.get('*', async (c) => {
 
 const SERVER_READY_MESSAGE = 'md-review server started';
 
+// Setup file watcher
+const watcher = watch(BASE_DIR, {
+  ignored: /(^|[\/\\])\..|(node_modules|dist)/,
+  persistent: true,
+  ignoreInitial: true,
+  awaitWriteFinish: {
+    stabilityThreshold: 100,
+    pollInterval: 100
+  }
+});
+
+watcher.on('change', (path) => {
+  // Only notify for markdown files
+  if (isMarkdownFile(path)) {
+    const relativePath = relative(BASE_DIR, path);
+    console.log(`File changed: ${relativePath}`);
+
+    // Broadcast to all SSE clients
+    const message = JSON.stringify({
+      type: 'file-changed',
+      path: relativePath
+    });
+
+    sseClients.forEach(client => {
+      try {
+        client.controller.enqueue(client.encoder.encode(`data: ${message}\n\n`));
+      } catch (err) {
+        // Client disconnected, remove it
+        sseClients.delete(client);
+      }
+    });
+  }
+});
+
+watcher.on('add', (path) => {
+  if (isMarkdownFile(path)) {
+    const relativePath = relative(BASE_DIR, path);
+    console.log(`File added: ${relativePath}`);
+
+    const message = JSON.stringify({
+      type: 'file-added',
+      path: relativePath
+    });
+
+    sseClients.forEach(client => {
+      try {
+        client.controller.enqueue(client.encoder.encode(`data: ${message}\n\n`));
+      } catch (err) {
+        sseClients.delete(client);
+      }
+    });
+  }
+});
+
 startServer(app, PORT).then((actualPort) => {
   console.log(`API Server running on http://localhost:${actualPort}`);
+  console.log(`Watching for file changes in: ${BASE_DIR}`);
   console.log(SERVER_READY_MESSAGE);
 }).catch((err) => {
   console.error('Failed to start server:', err.message);

@@ -3,6 +3,7 @@ import { useFileList } from '../hooks/useFileList';
 import { useMarkdown } from '../hooks/useMarkdown';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useResizable } from '../hooks/useResizable';
+import { useFileWatch } from '../hooks/useFileWatch';
 import { FileTree } from './FileTree';
 import { MarkdownPreview } from './MarkdownPreview';
 import { ErrorDisplay } from './ErrorDisplay';
@@ -16,7 +17,15 @@ export const DevModeApp = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [focusSearch, setFocusSearch] = useState<boolean>(false);
   const [commentsMap, setCommentsMap] = useLocalStorage<Record<string, Comment[]>>('md-review-comments', {});
-  const { content, filename, loading: markdownLoading, error: markdownError } = useMarkdown(selectedFile);
+  const { content, filename, loading: markdownLoading, error: markdownError, reload } = useMarkdown(selectedFile);
+
+  // Watch for file changes and reload current file
+  useFileWatch((changedPath) => {
+    if (selectedFile === changedPath) {
+      reload();
+    }
+  });
+
   const { width: sidebarWidth, isResizing, isCollapsed: sidebarCollapsed, handleMouseDown, toggleCollapse } = useResizable({
     initialWidth: 240,
     minWidth: 180,

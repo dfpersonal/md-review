@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface MarkdownData {
   content: string | null;
   filename: string | null;
   loading: boolean;
   error: Error | null;
+  reload: () => void;
 }
 
 const BASE_API_URL = '/api/markdown';
@@ -14,6 +15,11 @@ export const useMarkdown = (filePath?: string | null): MarkdownData => {
   const [filename, setFilename] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const [reloadTrigger, setReloadTrigger] = useState<number>(0);
+
+  const reload = useCallback(() => {
+    setReloadTrigger(prev => prev + 1);
+  }, []);
 
   useEffect(() => {
     const fetchMarkdown = async () => {
@@ -52,7 +58,7 @@ export const useMarkdown = (filePath?: string | null): MarkdownData => {
     };
 
     fetchMarkdown();
-  }, [filePath]);
+  }, [filePath, reloadTrigger]);
 
-  return { content, filename, loading, error };
+  return { content, filename, loading, error, reload };
 };

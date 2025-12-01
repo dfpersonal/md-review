@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import { useMarkdown } from '../hooks/useMarkdown';
+import { useFileWatch } from '../hooks/useFileWatch';
 import { MarkdownPreview } from './MarkdownPreview';
 import { ErrorDisplay } from './ErrorDisplay';
 import { Comment } from './CommentList';
 
 export const CliModeApp = () => {
-  const { content, filename, loading, error } = useMarkdown();
+  const { content, filename, loading, error, reload } = useMarkdown();
   const [comments, setComments] = useState<Comment[]>([]);
+
+  // Watch for file changes and reload
+  useFileWatch(() => {
+    reload();
+  });
 
   if (loading) {
     return (
