@@ -422,17 +422,19 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .comment-list-collapse-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   background: none;
   border: none;
-  border-radius: 3px;
+  border-radius: 4px;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.15s;
@@ -446,15 +448,40 @@
 }
 
 .comment-list-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-primary);
+  display: flex;
+  align-items: center;
   margin: 0;
+}
+
+.comment-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-count-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dc3545;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border-radius: 8px;
+  line-height: 1;
 }
 
 .comment-list-actions {
   display: flex;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .comment-list-copy-all {
@@ -469,6 +496,8 @@
   color: var(--text-tertiary);
   cursor: pointer;
   transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .comment-list-copy-all:hover {
@@ -494,6 +523,8 @@
   color: var(--text-tertiary);
   cursor: pointer;
   transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .comment-list-delete-all:hover {
