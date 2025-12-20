@@ -38,7 +38,7 @@ describe('CommentList', () => {
 
     expect(screen.getByText('First comment')).toBeInTheDocument();
     expect(screen.getByText('Second comment')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Comments (2)' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '2 comments' })).toBeInTheDocument();
   });
 
   it('should display empty state when no comments', () => {

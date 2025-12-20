@@ -125,7 +125,7 @@ export const CommentList = ({
               </svg>
             </button>
           )}
-          <h3 className="comment-list-title">
+          <h3 className="comment-list-title" aria-label={`${comments.length} comments`}>
             <span className="comment-icon-wrapper">
               <svg
                 width="18"
@@ -136,10 +136,13 @@ export const CommentList = ({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                aria-hidden="true"
               >
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
               </svg>
-              <span className="comment-count-badge">{comments.length}</span>
+              <span className="comment-count-badge" aria-hidden="true">
+                {comments.length}
+              </span>
             </span>
           </h3>
         </div>
