@@ -42,7 +42,11 @@
   },
   "keywords": [
     "markdown",
-    "review"
+    "review",
+    "cli",
+    "preview",
+    "comments",
+    "documentation"
   ],
   "author": "ryo-manba",
   "license": "MIT",
