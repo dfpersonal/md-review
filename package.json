@@ -50,6 +50,7 @@
   ],
   "author": "ryo-manba",
   "license": "MIT",
+  "funding": "https://github.com/ryo-manba/md-review?sponsor=1",
   "packageManager": "pnpm@10.23.0",
   "dependencies": {
     "@hono/node-server": "^1.19.6",
