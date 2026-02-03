@@ -4,7 +4,7 @@
   "description": "Review Markdown files in your browser with inline comments",
   "type": "module",
   "bin": {
-    "md-review": "./bin/md-review.js"
+    "md-review": "bin/md-review.js"
   },
   "files": [
     "bin",
